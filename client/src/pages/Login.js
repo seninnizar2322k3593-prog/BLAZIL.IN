@@ -64,6 +64,9 @@ const Login = () => {
           {/* Test Credentials Info Box */}
           <div className="test-credentials-box">
             <h4>🧪 Test Credentials</h4>
+            <div className="security-warning">
+              ⚠️ For testing purposes only - Remove in production
+            </div>
             <div className="test-accounts-list">
               {testAccounts.map((account, index) => (
                 <div key={index} className="test-account-item">

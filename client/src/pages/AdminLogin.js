@@ -62,6 +62,9 @@ const AdminLogin = () => {
           {/* Admin Credentials Info Box */}
           <div className="admin-credentials-box">
             <h4>🔑 Admin Credentials</h4>
+            <div className="security-warning">
+              ⚠️ For testing only - Remove in production
+            </div>
             <div className="admin-credential-item">
               <div className="credential-info">
                 <strong>Admin Account:</strong><br />

@@ -51,10 +51,22 @@
 }
 
 .admin-credentials-box h4 {
-  margin: 0 0 15px 0;
+  margin: 0 0 10px 0;
   color: #000;
   font-size: 16px;
   text-align: center;
+  font-weight: 600;
+}
+
+.security-warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 12px;
   font-weight: 600;
 }
 

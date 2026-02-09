@@ -53,6 +53,8 @@ The application comes with pre-configured test accounts for easy testing:
 
 Test credentials are displayed on the login pages with a "Use Test Account" button for quick filling.
 
+**⚠️ Security Warning:** The pre-filled test credentials are for development and testing only. In a production environment, remove or disable the test credential display to prevent unauthorized access.
+
 ## 🛠️ Tech Stack
 
 ### Backend
@@ -99,18 +101,21 @@ Create a `.env` file in the server directory (or use the provided `.env` file):
 PORT=5000
 NODE_ENV=development
 
-# Database
-MONGO_URI=mongodb+srv://njr:basil@cluster0.bh1ngba.mongodb.net/blazil_db?retryWrites=true&w=majority&appName=Cluster0
+# Database - Replace with your MongoDB connection string
+MONGO_URI=your_mongodb_connection_string_here
 DB_NAME=blazil_db
 
-# JWT
-JWT_SECRET=blazil_super_secret_key_2026_secure
+# JWT - Replace with a strong random secret
+JWT_SECRET=your_secure_jwt_secret_key_here
 
-# Email Configuration
+# Email Configuration - Setup Gmail App Password
+# 1. Enable 2-factor authentication on your Gmail account
+# 2. Go to Google Account Settings > Security > App Passwords
+# 3. Generate a new app password for "Mail"
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=bslxrnilagiribsccs@gmail.com
-EMAIL_PASS=your_app_password_here
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_gmail_app_password_here
 
 # Admin Credentials
 ADMIN_EMAIL=bslxrnilagiribsccs@gmail.com
@@ -123,6 +128,8 @@ UPLOAD_PATH=./uploads/resumes
 # Frontend URL
 CLIENT_URL=http://localhost:3000
 ```
+
+**⚠️ Production Note:** The MongoDB URI and admin credentials shown in this example are for demonstration purposes. In production, use environment variables and never commit sensitive credentials to version control.
 
 Seed the database with test users:
 ```bash
