@@ -14,9 +14,23 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const { email, password } = formData;
+  
+  // Test accounts
+  const testAccounts = [
+    { label: 'Test Student Account', email: 'student@test.com', password: 'Student123' },
+    { label: 'Test Normal User', email: 'user@test.com', password: 'User123' },
+    { label: 'Test Client Account', email: 'client@test.com', password: 'Client123' }
+  ];
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  
+  const useTestAccount = (account) => {
+    setFormData({
+      email: account.email,
+      password: account.password
+    });
   };
 
   const onSubmit = async (e) => {
@@ -46,6 +60,32 @@ const Login = () => {
         <div className="auth-container">
           <h1>Welcome Back</h1>
           <p className="auth-subtitle">Login to your account</p>
+          
+          {/* Test Credentials Info Box */}
+          <div className="test-credentials-box">
+            <h4>🧪 Test Credentials</h4>
+            <div className="security-warning">
+              ⚠️ For testing purposes only - Remove in production
+            </div>
+            <div className="test-accounts-list">
+              {testAccounts.map((account, index) => (
+                <div key={index} className="test-account-item">
+                  <div className="test-account-info">
+                    <strong>{account.label}:</strong><br />
+                    Email: {account.email}<br />
+                    Password: {account.password}
+                  </div>
+                  <button 
+                    type="button"
+                    className="btn-use-test"
+                    onClick={() => useTestAccount(account)}
+                  >
+                    Use
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {error && <div className="alert alert-error">{error}</div>}
 

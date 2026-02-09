@@ -20,10 +20,19 @@ const businessIdeaSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please describe your business idea']
   },
+  category: {
+    type: String
+  },
+  investmentNeeded: {
+    type: String
+  },
   status: {
     type: String,
-    enum: ['pending', 'under-review', 'connected'],
+    enum: ['pending', 'under-review', 'connected', 'rejected'],
     default: 'pending'
+  },
+  adminNotes: {
+    type: String
   },
   submittedAt: {
     type: Date,

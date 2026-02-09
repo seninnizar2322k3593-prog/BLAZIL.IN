@@ -22,7 +22,7 @@ const jobSchema = new mongoose.Schema({
   state: {
     type: String,
     required: [true, 'Please add a state'],
-    enum: ['Andhra Pradesh', 'Karnataka', 'Kerala', 'Tamil Nadu', 'Telangana', 'Puducherry']
+    enum: ['Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh', 'Telangana']
   },
   jobType: {
     type: String,
@@ -32,6 +32,10 @@ const jobSchema = new mongoose.Schema({
   salary: {
     type: String,
     required: [true, 'Please add salary information']
+  },
+  requirements: {
+    type: [String],
+    default: []
   },
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,

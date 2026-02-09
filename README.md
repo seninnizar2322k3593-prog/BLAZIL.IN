@@ -8,10 +8,12 @@ A full-stack MERN (MongoDB, Express.js, React, Node.js) web application for job 
 - **Job Listings**: Part-time, full-time, and work-from-home jobs
 - **Auto-Expiry**: Part-time jobs automatically expire after 24 hours
 - **Multiple User Roles**: Student, Normal User, Client/Employer, Admin
-- **Email Verification**: Secure signup with email verification (OTP)
+- **Email Verification**: Secure signup with 6-digit OTP email verification
 - **Resume Upload**: File upload functionality for job applications
 - **Business World**: Connect entrepreneurs with investors
 - **Admin Dashboard**: Complete management system for jobs, users, and applications
+- **Separate Admin Login**: Dedicated admin portal at `/admin/login`
+- **Test Credentials**: Pre-filled test accounts for easy testing
 
 ### User Roles
 
@@ -35,10 +37,23 @@ A full-stack MERN (MongoDB, Express.js, React, Node.js) web application for job 
 - Approve or delete job posts
 - Manage business idea submissions
 - Dashboard with analytics
+- Access via separate admin login page
 
-**Admin Credentials:**
-- Email: `bslxrnilagiribsccs@gmail.com`
-- Password: `Basilreji@0071`
+### Test Credentials
+
+The application comes with pre-configured test accounts for easy testing:
+
+**User Login** (`/login`):
+- **Student**: student@test.com / Student123
+- **Normal User**: user@test.com / User123
+- **Client**: client@test.com / Client123
+
+**Admin Login** (`/admin/login`):
+- **Admin**: bslxrnilagiribsccs@gmail.com / Basilreji@0071
+
+Test credentials are displayed on the login pages with a "Use Test Account" button for quick filling.
+
+**⚠️ Security Warning:** The pre-filled test credentials are for development and testing only. In a production environment, remove or disable the test credential display to prevent unauthorized access.
 
 ## 🛠️ Tech Stack
 
@@ -80,18 +95,52 @@ cd server
 npm install
 ```
 
-Create a `.env` file in the server directory:
+Create a `.env` file in the server directory (or use the provided `.env` file):
 ```env
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+# Server
+PORT=5000
+NODE_ENV=development
+
+# Database - Replace with your MongoDB connection string
+MONGO_URI=your_mongodb_connection_string_here
+DB_NAME=blazil_db
+
+# JWT - Replace with a strong random secret
+JWT_SECRET=your_secure_jwt_secret_key_here
+
+# Email Configuration - Setup Gmail App Password
+# 1. Enable 2-factor authentication on your Gmail account
+# 2. Go to Google Account Settings > Security > App Passwords
+# 3. Generate a new app password for "Mail"
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_password
-PORT=5000
-NODE_ENV=development
+EMAIL_PASS=your_gmail_app_password_here
+
+# Admin Credentials
+ADMIN_EMAIL=bslxrnilagiribsccs@gmail.com
+ADMIN_PASSWORD=Basilreji@0071
+
+# File Upload
+MAX_FILE_SIZE=5242880
+UPLOAD_PATH=./uploads/resumes
+
+# Frontend URL
 CLIENT_URL=http://localhost:3000
 ```
+
+**⚠️ Production Note:** The MongoDB URI and admin credentials shown in this example are for demonstration purposes. In production, use environment variables and never commit sensitive credentials to version control.
+
+Seed the database with test users:
+```bash
+npm run seed
+```
+
+This will create the following test accounts:
+- **Student**: student@test.com / Student123
+- **Normal User**: user@test.com / User123
+- **Client**: client@test.com / Client123
+- **Admin**: bslxrnilagiribsccs@gmail.com / Basilreji@0071
 
 Start the backend server:
 ```bash
@@ -189,8 +238,8 @@ BLAZIL.IN/
 ### Authentication Routes
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - User login
-- `POST /api/auth/verify-email` - Verify email with token
-- `POST /api/auth/resend-verification` - Resend verification email
+- `POST /api/auth/verify-email` - Verify email with 6-digit OTP code
+- `POST /api/auth/resend-verification` - Resend verification code
 - `GET /api/auth/me` - Get current user
 
 ### Job Routes
