@@ -1,0 +1,89 @@
+.job-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.job-header h3 {
+  color: var(--text-dark);
+  margin: 0;
+  font-size: 22px;
+}
+
+.job-type {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.job-type.part-time {
+  background-color: var(--light-pink);
+  color: var(--dark-pink);
+}
+
+.job-type.full-time {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.job-type.work-from-home {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.job-company {
+  margin-bottom: 10px;
+  color: var(--text-dark);
+}
+
+.job-location,
+.job-salary {
+  margin-bottom: 8px;
+  color: var(--text-light);
+}
+
+.job-description {
+  margin: 15px 0;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.job-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+.expires-at {
+  font-size: 14px;
+  color: var(--warning-color);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .job-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}
