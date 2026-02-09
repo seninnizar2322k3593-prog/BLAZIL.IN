@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const { generateToken } = require('../utils/token');
-const { sendVerificationEmail, generateVerificationToken } = require('../utils/email');
+const { sendVerificationEmail, generateVerificationCode } = require('../utils/email');
 const bcrypt = require('bcryptjs');
 
 // @desc    Register user
@@ -17,8 +17,9 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
     
-    // Generate verification token
-    const verificationToken = generateVerificationToken();
+    // Generate verification code (6-digit OTP)
+    const verificationCode = generateVerificationCode();
+    const verificationCodeExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     
     // Create user
     const user = await User.create({
@@ -26,12 +27,13 @@ exports.register = async (req, res) => {
       email,
       password,
       role: role || 'normal',
-      verificationToken
+      verificationCode,
+      verificationCodeExpiry
     });
     
     // Send verification email
     try {
-      await sendVerificationEmail(email, verificationToken);
+      await sendVerificationEmail(email, verificationCode);
     } catch (error) {
       console.error('Email sending failed:', error);
       // Continue with registration even if email fails
@@ -97,23 +99,33 @@ exports.login = async (req, res) => {
   }
 };
 
-// @desc    Verify email
+// @desc    Verify email with OTP
 // @route   POST /api/auth/verify-email
 // @access  Public
 exports.verifyEmail = async (req, res) => {
   try {
-    const { token } = req.body;
+    const { code, email } = req.body;
     
-    // Find user with verification token
-    const user = await User.findOne({ verificationToken: token });
+    // Find user with verification code
+    const user = await User.findOne({ 
+      email,
+      verificationCode: code 
+    });
     
     if (!user) {
-      return res.status(400).json({ message: 'Invalid verification token' });
+      return res.status(400).json({ message: 'Invalid verification code' });
+    }
+    
+    // Check if code has expired
+    if (user.verificationCodeExpiry && user.verificationCodeExpiry < Date.now()) {
+      return res.status(400).json({ message: 'Verification code has expired. Please request a new one.' });
     }
     
     // Update user verification status
     user.isVerified = true;
-    user.verificationToken = undefined;
+    user.verificationCode = undefined;
+    user.verificationCodeExpiry = undefined;
+    user.verificationToken = undefined; // Clean up old token field
     await user.save();
     
     res.json({
@@ -132,7 +144,7 @@ exports.verifyEmail = async (req, res) => {
   }
 };
 
-// @desc    Resend verification email
+// @desc    Resend verification code
 // @route   POST /api/auth/resend-verification
 // @access  Public
 exports.resendVerification = async (req, res) => {
@@ -150,15 +162,18 @@ exports.resendVerification = async (req, res) => {
       return res.status(400).json({ message: 'Email already verified' });
     }
     
-    // Generate new verification token
-    const verificationToken = generateVerificationToken();
-    user.verificationToken = verificationToken;
+    // Generate new verification code
+    const verificationCode = generateVerificationCode();
+    const verificationCodeExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    
+    user.verificationCode = verificationCode;
+    user.verificationCodeExpiry = verificationCodeExpiry;
     await user.save();
     
     // Send verification email
-    await sendVerificationEmail(email, verificationToken);
+    await sendVerificationEmail(email, verificationCode);
     
-    res.json({ message: 'Verification email sent successfully' });
+    res.json({ message: 'Verification code sent successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', error: error.message });

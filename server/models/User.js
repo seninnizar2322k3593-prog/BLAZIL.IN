@@ -32,6 +32,15 @@ const userSchema = new mongoose.Schema({
   verificationToken: {
     type: String
   },
+  verificationCode: {
+    type: String
+  },
+  verificationCodeExpiry: {
+    type: Date
+  },
+  phone: {
+    type: String
+  },
   resume: {
     type: String
   },
