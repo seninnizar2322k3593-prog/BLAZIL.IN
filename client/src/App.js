@@ -6,7 +6,10 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Jobs from './pages/Jobs';
+import JobDetails from './pages/JobDetails';
+import PostJob from './pages/PostJob';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import BusinessWorld from './pages/BusinessWorld';
 import VerifyEmail from './pages/VerifyEmail';
 import './App.css';
@@ -40,14 +43,33 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/business-world" element={<BusinessWorld />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          
+          <Route
+            path="/post-job"
+            element={
+              <ProtectedRoute roles={['client', 'admin']}>
+                <PostJob />
+              </ProtectedRoute>
+            }
+          />
           
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute roles={['admin']}>
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />
