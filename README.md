@@ -129,6 +129,12 @@ UPLOAD_PATH=./uploads/resumes
 CLIENT_URL=http://localhost:3000
 ```
 
+**⚠️ MongoDB Setup Required:**
+Before starting the server, you MUST configure a valid MongoDB connection. See [server/MONGODB_SETUP.md](server/MONGODB_SETUP.md) for detailed instructions on:
+- Setting up MongoDB Atlas (cloud - free tier available)
+- Installing MongoDB locally
+- Troubleshooting connection errors
+
 **⚠️ Production Note:** The MongoDB URI and admin credentials shown in this example are for demonstration purposes. In production, use environment variables and never commit sensitive credentials to version control.
 
 Seed the database with test users:

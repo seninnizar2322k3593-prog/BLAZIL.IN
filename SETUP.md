@@ -26,11 +26,30 @@ cp ../.env.example .env
 ```
 
 Edit `.env` and update the following variables:
-```env
-MONGO_URI=mongodb://localhost:27017/blazil-in
-# OR use MongoDB Atlas:
-# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/blazil-in
 
+**IMPORTANT: You MUST configure a valid MongoDB connection string**
+
+#### Option 1: Local MongoDB (Recommended for Development)
+```env
+MONGO_URI=mongodb://localhost:27017/blazil_db
+```
+
+#### Option 2: MongoDB Atlas (Recommended for Production)
+```env
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/blazil_db?retryWrites=true&w=majority
+```
+
+Replace `username`, `password`, and `cluster` with your MongoDB Atlas credentials.
+
+**Common MongoDB Atlas Setup:**
+1. Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a database user with a password
+3. Whitelist your IP address (or use 0.0.0.0/0 for development)
+4. Copy the connection string and replace `<password>` with your database user password
+5. Ensure the connection string starts with `mongodb+srv://`
+
+**Other Required Variables:**
+```env
 JWT_SECRET=your-random-secret-key-here
 
 # For Gmail SMTP (enable 2FA and create app password)
@@ -131,10 +150,57 @@ curl http://localhost:5000/api/health
 
 ## Common Issues & Solutions
 
-### MongoDB Connection Error
-- Ensure MongoDB is running
-- Check if MONGO_URI is correct
-- For Atlas, ensure IP is whitelisted
+### MongoDB Connection Error (querySrv ECONNREFUSED / ENOTFOUND)
+
+**This is the most common error when starting the server.**
+
+**Symptoms:**
+```
+Error: querySrv ECONNREFUSED _mongodb._tcp.xxxxx.mongodb.net
+```
+
+**Causes & Solutions:**
+
+1. **Missing or Invalid MONGO_URI**
+   - Check that `.env` file exists in the `server` directory
+   - Verify `MONGO_URI` is set and not empty
+   - Ensure the connection string starts with `mongodb://` or `mongodb+srv://`
+
+2. **Incorrect MongoDB Atlas Connection String**
+   - Format should be: `mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority`
+   - Replace `<password>` placeholder with actual password
+   - Remove angle brackets `<` `>` from the connection string
+   - Ensure no spaces in the connection string
+
+3. **IP Not Whitelisted (MongoDB Atlas)**
+   - Go to MongoDB Atlas → Network Access
+   - Add your current IP or use `0.0.0.0/0` (allows all IPs - for development only)
+
+4. **Local MongoDB Not Running**
+   - If using local MongoDB, ensure the service is started
+   - Check if MongoDB is listening on port 27017
+
+5. **Network/Firewall Issues**
+   - Check firewall settings
+   - Verify internet connection for MongoDB Atlas
+
+**Quick Fix:**
+```bash
+# 1. Navigate to server directory
+cd server
+
+# 2. Check if .env exists
+ls -la .env
+
+# 3. Edit .env and set a valid MONGO_URI
+nano .env  # or use your preferred editor
+
+# 4. For quick testing, use local MongoDB:
+MONGO_URI=mongodb://localhost:27017/blazil_db
+
+# 5. Restart the server
+npm start
+```
 
 ### Email Not Sending
 - Use Gmail with App Password (not regular password)

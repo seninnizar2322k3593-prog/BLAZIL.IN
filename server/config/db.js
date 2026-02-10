@@ -2,6 +2,24 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
+    // Validate MONGO_URI is set
+    if (!process.env.MONGO_URI) {
+      throw new Error(
+        'MONGO_URI environment variable is not defined.\n' +
+        'Please create a .env file in the root directory and set MONGO_URI.\n' +
+        'Example: MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority\n' +
+        'See .env.example for reference.'
+      );
+    }
+
+    // Validate MONGO_URI format
+    if (!process.env.MONGO_URI.startsWith('mongodb://') && !process.env.MONGO_URI.startsWith('mongodb+srv://')) {
+      throw new Error(
+        'MONGO_URI must start with "mongodb://" or "mongodb+srv://".\n' +
+        'Current value: ' + process.env.MONGO_URI
+      );
+    }
+
     const conn = await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -9,7 +27,16 @@ const connectDB = async () => {
     
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    const connectionErrors = ['querySrv', 'ENOTFOUND', 'ECONNREFUSED', 'EREFUSED'];
+    if (connectionErrors.some(err => error.message.includes(err))) {
+      console.error('\nTroubleshooting tips:');
+      console.error('1. Verify your MongoDB connection string is correct');
+      console.error('2. Check if your IP address is whitelisted in MongoDB Atlas');
+      console.error('3. Ensure your database user credentials are correct');
+      console.error('4. Verify network connectivity to MongoDB');
+      console.error('5. See server/MONGODB_SETUP.md for detailed setup instructions');
+    }
     process.exit(1);
   }
 };
