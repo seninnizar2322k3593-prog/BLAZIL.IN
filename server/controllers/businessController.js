@@ -1,10 +1,17 @@
 const BusinessIdea = require('../models/BusinessIdea');
+const { validationResult } = require('express-validator');
 
 // @desc    Submit business idea
 // @route   POST /api/business/contact
 // @access  Public
 exports.submitBusinessIdea = async (req, res) => {
   try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { name, email, phone, idea } = req.body;
     
     const businessIdea = await BusinessIdea.create({

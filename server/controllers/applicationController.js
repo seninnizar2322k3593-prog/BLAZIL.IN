@@ -1,5 +1,6 @@
 const Application = require('../models/Application');
 const Job = require('../models/Job');
+const { validationResult } = require('express-validator');
 
 // @desc    Apply for a job
 // @route   POST /api/applications
@@ -7,6 +8,11 @@ const Job = require('../models/Job');
 exports.applyForJob = async (req, res) => {
   try {
     const { jobId, coverLetter } = req.body;
+    
+    // Validate required fields
+    if (!jobId) {
+      return res.status(400).json({ message: 'Job ID is required' });
+    }
     
     // Check if resume file was uploaded
     if (!req.file) {
