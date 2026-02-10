@@ -27,7 +27,7 @@ router.get('/', getAllJobs);
 router.get('/my-jobs', protect, verified, authorize('client'), getMyJobs);
 router.get('/:id', getJobById);
 router.post('/', protect, verified, authorize('client', 'admin'), jobValidation, createJob);
-router.put('/:id', protect, verified, authorize('client', 'admin'), updateJob);
+router.put('/:id', protect, verified, authorize('client', 'admin'), jobValidation, updateJob);
 router.delete('/:id', protect, verified, authorize('client', 'admin'), deleteJob);
 
 module.exports = router;

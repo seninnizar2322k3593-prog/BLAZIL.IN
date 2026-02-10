@@ -2,12 +2,19 @@ const User = require('../models/User');
 const { generateToken } = require('../utils/token');
 const { sendVerificationEmail, generateVerificationCode } = require('../utils/email');
 const bcrypt = require('bcryptjs');
+const { validationResult } = require('express-validator');
 
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = async (req, res) => {
   try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { name, email, password, role } = req.body;
     
     // Check if user already exists
@@ -59,6 +66,12 @@ exports.register = async (req, res) => {
 // @access  Public
 exports.login = async (req, res) => {
   try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { email, password } = req.body;
     
     // Check for user email
@@ -73,16 +86,6 @@ exports.login = async (req, res) => {
     
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
-    }
-    
-    // Check for hardcoded admin credentials
-    if (email === 'bslxrnilagiribsccs@gmail.com' && password === 'Basilreji@0071') {
-      // Update user role to admin if not already
-      if (user.role !== 'admin') {
-        user.role = 'admin';
-        user.isVerified = true;
-        await user.save();
-      }
     }
     
     res.json({
@@ -104,6 +107,12 @@ exports.login = async (req, res) => {
 // @access  Public
 exports.verifyEmail = async (req, res) => {
   try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { code, email } = req.body;
     
     // Find user with verification code
@@ -149,6 +158,12 @@ exports.verifyEmail = async (req, res) => {
 // @access  Public
 exports.resendVerification = async (req, res) => {
   try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const { email } = req.body;
     
     // Find user
@@ -185,7 +200,16 @@ exports.resendVerification = async (req, res) => {
 // @access  Private
 exports.getMe = async (req, res) => {
   try {
+    // Check if user exists in request
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+
     const user = await User.findById(req.user._id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
     
     res.json({
       _id: user._id,

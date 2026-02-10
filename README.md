@@ -12,7 +12,7 @@ A full-stack MERN (MongoDB, Express.js, React, Node.js) web application for job 
 - **Resume Upload**: File upload functionality for job applications
 - **Business World**: Connect entrepreneurs with investors
 - **Admin Dashboard**: Complete management system for jobs, users, and applications
-- **Separate Admin Login**: Dedicated admin portal at `/admin/login`
+- **Separate Admin Portal**: Dedicated standalone admin portal application
 - **Test Credentials**: Pre-filled test accounts for easy testing
 
 ### User Roles
@@ -170,11 +170,31 @@ npm start
 
 The app will run on `http://localhost:3000`
 
+### 4. Admin Portal Setup (Separate Application)
+
+The admin portal is a standalone React application in a separate folder:
+
+```bash
+cd admin-portal
+npm install
+```
+
+Start the admin portal:
+```bash
+npm start
+```
+
+The admin portal will run on `http://localhost:3000` (or another port if 3000 is already in use)
+
+**Note:** Admin accounts are created through the backend seed script. In development mode, a test account button is available for quick access.
+
+See [admin-portal/README.md](admin-portal/README.md) for detailed admin portal documentation and setup instructions.
+
 ## 📁 Project Structure
 
 ```
 BLAZIL.IN/
-├── client/                 # React frontend
+├── client/                 # React frontend (User-facing)
 │   ├── public/
 │   │   └── index.html
 │   ├── src/
@@ -197,6 +217,18 @@ BLAZIL.IN/
 │   │   ├── index.js
 │   │   └── index.css
 │   └── package.json
+│
+├── admin-portal/           # Separate admin portal application
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── pages/          # Admin pages (Login, Dashboard)
+│   │   ├── context/        # Auth context
+│   │   ├── utils/          # API utilities
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── package.json
+│   └── README.md           # Admin portal documentation
 │
 ├── server/                 # Node.js backend
 │   ├── config/             # Configuration files
@@ -268,6 +300,28 @@ BLAZIL.IN/
 
 ### Business Routes
 - `POST /api/business/contact` - Submit business idea
+
+## 🔧 Backend Improvements
+
+The backend has been enhanced with several critical fixes:
+
+### Security Enhancements
+- ✅ **Removed hardcoded admin credentials** from login logic
+- ✅ **Added request validation** with express-validator in all controllers
+- ✅ **Improved error handling** for file uploads with multer
+- ✅ **Added null/undefined checks** for protected routes
+
+### Bug Fixes
+- ✅ **Fixed search filter bug** that was overwriting job expiry conditions
+- ✅ **Added validation middleware** to PUT/DELETE routes
+- ✅ **Improved error messages** with proper development vs production handling
+- ✅ **Added multer error handler** for better file upload error messages
+
+### Code Quality
+- ✅ All controllers now use `validationResult` from express-validator
+- ✅ Proper error handling across all endpoints
+- ✅ Consistent validation patterns
+- ✅ Clean separation of concerns
 
 ## 🎨 Design
 
