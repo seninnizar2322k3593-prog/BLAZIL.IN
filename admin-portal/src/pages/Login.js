@@ -35,11 +35,17 @@ const Login = () => {
     }
   };
 
+  // Only show test account button in development mode
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
   const useTestAccount = () => {
-    setFormData({
-      email: 'bslxrnilagiribsccs@gmail.com',
-      password: 'Basilreji@0071',
-    });
+    // Test credentials only available in development
+    if (isDevelopment) {
+      setFormData({
+        email: 'bslxrnilagiribsccs@gmail.com',
+        password: 'Basilreji@0071',
+      });
+    }
   };
 
   return (
@@ -82,9 +88,11 @@ const Login = () => {
           </button>
         </form>
 
-        <button onClick={useTestAccount} className="test-account-btn">
-          Use Test Admin Account
-        </button>
+        {isDevelopment && (
+          <button onClick={useTestAccount} className="test-account-btn">
+            Use Test Admin Account (Dev Only)
+          </button>
+        )}
         
         <p className="security-notice">
           ⚠️ This is the admin portal. Only authorized administrators can access this area.

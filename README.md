@@ -186,11 +186,9 @@ npm start
 
 The admin portal will run on `http://localhost:3000` (or another port if 3000 is already in use)
 
-**Admin Portal Access:**
-- Email: bslxrnilagiribsccs@gmail.com
-- Password: Basilreji@0071
+**Note:** Admin accounts are created through the backend seed script. In development mode, a test account button is available for quick access.
 
-See [admin-portal/README.md](admin-portal/README.md) for detailed admin portal documentation.
+See [admin-portal/README.md](admin-portal/README.md) for detailed admin portal documentation and setup instructions.
 
 ## 📁 Project Structure
 

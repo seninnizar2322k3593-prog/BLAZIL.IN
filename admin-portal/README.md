@@ -47,11 +47,32 @@ The admin portal will run on `http://localhost:3000`
 
 ## 🔐 Admin Access
 
-**Default Admin Credentials:**
-- Email: bslxrnilagiribsccs@gmail.com
-- Password: Basilreji@0071
+### Creating an Admin Account
 
-⚠️ **Security Warning:** Change these credentials in a production environment!
+Admins are created through the backend seed script or database. To create an admin:
+
+1. **Using the seed script** (Development):
+```bash
+cd server
+npm run seed
+```
+This creates test users including an admin account.
+
+2. **Manual database creation** (Production):
+- Create a user with `role: 'admin'` in the MongoDB database
+- Ensure `isVerified: true` is set
+- Use a strong, unique password
+
+3. **Environment-based admin** (Recommended for Production):
+- Set admin credentials in server environment variables
+- Implement admin user creation on first startup
+- Never commit admin credentials to version control
+
+### Development Mode
+
+In development mode (`NODE_ENV=development`), a "Use Test Admin Account" button appears on the login page for quick testing.
+
+⚠️ **Security Note:** Test account functionality is automatically disabled in production builds.
 
 ## 📋 Admin Portal Pages
 
