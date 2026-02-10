@@ -28,12 +28,13 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    if (error.message.includes('querySrv ECONNREFUSED') || error.message.includes('ENOTFOUND')) {
+    if (error.message.includes('querySrv') || error.message.includes('ENOTFOUND') || error.message.includes('ECONNREFUSED') || error.message.includes('EREFUSED')) {
       console.error('\nTroubleshooting tips:');
       console.error('1. Verify your MongoDB connection string is correct');
       console.error('2. Check if your IP address is whitelisted in MongoDB Atlas');
       console.error('3. Ensure your database user credentials are correct');
       console.error('4. Verify network connectivity to MongoDB');
+      console.error('5. See server/MONGODB_SETUP.md for detailed setup instructions');
     }
     process.exit(1);
   }
