@@ -43,7 +43,7 @@ MongoDB Atlas provides a free tier that's perfect for development and small proj
 1. Go to **Database** (left sidebar)
 2. Click **"Connect"** on your cluster
 3. Choose **"Connect your application"**
-4. Select **"Driver: Node.js"** and **Version: 5.5 or later**
+4. Select **"Driver: Node.js"** (use the latest stable version)
 5. Copy the connection string, it looks like:
    ```
    mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
@@ -78,11 +78,13 @@ For local development, you can install MongoDB on your machine.
 ### Ubuntu/Debian
 
 ```bash
-# Import MongoDB public GPG key
-wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+# Import MongoDB public GPG key using modern method
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
+  sudo gpg --dearmor -o /usr/share/keyrings/mongodb-archive-keyring.gpg
 
 # Create list file for MongoDB
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/7.0 multiverse" | \
+  sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 
 # Update package database
 sudo apt-get update

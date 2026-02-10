@@ -202,11 +202,6 @@ MONGO_URI=mongodb://localhost:27017/blazil_db
 npm start
 ```
 
-### MongoDB Connection Error
-- Ensure MongoDB is running
-- Check if MONGO_URI is correct
-- For Atlas, ensure IP is whitelisted
-
 ### Email Not Sending
 - Use Gmail with App Password (not regular password)
 - Enable 2-factor authentication

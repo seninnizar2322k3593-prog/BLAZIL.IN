@@ -28,7 +28,8 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    if (error.message.includes('querySrv') || error.message.includes('ENOTFOUND') || error.message.includes('ECONNREFUSED') || error.message.includes('EREFUSED')) {
+    const connectionErrors = ['querySrv', 'ENOTFOUND', 'ECONNREFUSED', 'EREFUSED'];
+    if (connectionErrors.some(err => error.message.includes(err))) {
       console.error('\nTroubleshooting tips:');
       console.error('1. Verify your MongoDB connection string is correct');
       console.error('2. Check if your IP address is whitelisted in MongoDB Atlas');
