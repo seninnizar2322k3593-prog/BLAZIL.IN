@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+// Flag to prevent duplicate SIGINT handlers
+let shutdownHandlerRegistered = false;
+
 const connectDB = async () => {
   try {
     // Validate MONGO_URI is set
@@ -20,6 +23,19 @@ const connectDB = async () => {
       );
     }
 
+    // Connection event handlers - register BEFORE connection
+    mongoose.connection.on('connected', () => {
+      console.log('Mongoose connected to MongoDB');
+    });
+
+    mongoose.connection.on('error', (err) => {
+      console.error('Mongoose connection error:', err);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.log('Mongoose disconnected from MongoDB');
+    });
+
     // Connection options with pooling and retry logic
     const options = {
       useNewUrlParser: true,
@@ -35,26 +51,29 @@ const connectDB = async () => {
     
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     console.log(`Database: ${conn.connection.name}`);
-    
-    // Connection event handlers for monitoring
-    mongoose.connection.on('connected', () => {
-      console.log('Mongoose connected to MongoDB');
-    });
 
-    mongoose.connection.on('error', (err) => {
-      console.error('Mongoose connection error:', err);
-    });
+    // Graceful shutdown handling - register once
+    if (!shutdownHandlerRegistered) {
+      const gracefulShutdown = async (signal) => {
+        console.log(`\nReceived ${signal}, closing MongoDB connection...`);
+        try {
+          await mongoose.connection.close();
+          console.log('Mongoose connection closed gracefully');
+          process.exit(0);
+        } catch (err) {
+          console.error('Error during graceful shutdown:', err);
+          process.exit(1);
+        }
+      };
 
-    mongoose.connection.on('disconnected', () => {
-      console.log('Mongoose disconnected from MongoDB');
-    });
+      // Handle SIGINT (Ctrl+C)
+      process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+      
+      // Handle SIGTERM (used by Docker, Kubernetes, PM2)
+      process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
-    // Graceful shutdown handling
-    process.on('SIGINT', async () => {
-      await mongoose.connection.close();
-      console.log('Mongoose connection closed due to application termination');
-      process.exit(0);
-    });
+      shutdownHandlerRegistered = true;
+    }
 
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
