@@ -101,7 +101,7 @@ MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrit
 
 **For Local Development:**
 ```env
-MONGO_URI=mongodb://localhost:27017/blazil_db
+MONGO_URI=mongodb://localhost:27017/blazil_db?retryWrites=true&w=majority
 ```
 
 ## Usage
